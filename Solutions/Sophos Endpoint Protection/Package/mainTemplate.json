@@ -33,18 +33,9 @@
     "email": "support@microsoft.com",
     "_email": "[variables('email')]",
     "_solutionName": "Sophos Endpoint Protection",
-    "_solutionVersion": "3.0.0",
+    "_solutionVersion": "3.0.1",
     "solutionId": "azuresentinel.azure-sentinel-solution-sophosep",
     "_solutionId": "[variables('solutionId')]",
-    "parserName1": "Sophos Endpoint Protection Data Parser",
-    "_parserName1": "[concat(parameters('workspace'),'/',variables('parserName1'))]",
-    "parserId1": "[resourceId('Microsoft.OperationalInsights/workspaces/savedSearches', parameters('workspace'), variables('parserName1'))]",
-    "_parserId1": "[variables('parserId1')]",
-    "parserTemplateSpecName1": "[concat(parameters('workspace'),'/Microsoft.SecurityInsights/',concat(parameters('workspace'),'-pr-',uniquestring(variables('_parserContentId1'))))]",
-    "parserVersion1": "1.0.0",
-    "parserContentId1": "SophosEPEvent-Parser",
-    "_parserContentId1": "[variables('parserContentId1')]",
-    "_parsercontentProductId1": "[concat(take(variables('_solutionId'),50),'-','pr','-', uniqueString(concat(variables('_solutionId'),'-','Parser','-',variables('_parserContentId1'),'-', variables('parserVersion1'))))]",
     "uiConfigId1": "SophosEP",
     "_uiConfigId1": "[variables('uiConfigId1')]",
     "dataConnectorContentId1": "SophosEP",
@@ -60,145 +51,13 @@
     {
       "type": "Microsoft.OperationalInsights/workspaces/providers/contentTemplates",
       "apiVersion": "2023-04-01-preview",
-      "name": "[variables('parserTemplateSpecName1')]",
-      "location": "[parameters('workspace-location')]",
-      "dependsOn": [
-        "[extensionResourceId(resourceId('Microsoft.OperationalInsights/workspaces', parameters('workspace')), 'Microsoft.SecurityInsights/contentPackages', variables('_solutionId'))]"
-      ],
-      "properties": {
-        "description": "SophosEPEvent Data Parser with template version 3.0.0",
-        "mainTemplate": {
-          "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
-          "contentVersion": "[variables('parserVersion1')]",
-          "parameters": {},
-          "variables": {},
-          "resources": [
-            {
-              "name": "[variables('_parserName1')]",
-              "apiVersion": "2022-10-01",
-              "type": "Microsoft.OperationalInsights/workspaces/savedSearches",
-              "location": "[parameters('workspace-location')]",
-              "properties": {
-                "eTag": "*",
-                "displayName": "Sophos Endpoint Protection Data Parser",
-                "category": "Samples",
-                "functionAlias": "SophosEPEvent",
-                "query": "\nSophosEP_CL\r\n| extend EventVendor = 'Sophos'\r\n| extend EventProduct = 'Endpoint Protection'\r\n| project-rename DstUserSid=user_id_s,\r\n    CustomerId=customer_id_g,\r\n    EventSeverity=severity_s,\r\n    Created=created_at_t,\r\n    SrcIpAddr=source_info_ip_s,\r\n    ThreatName=threat_s,\r\n    EndpointId=endpoint_id_g,\r\n    SrcDvcType=endpoint_type_s,\r\n    EventSubType=origin_s,\r\n    EventEndTime=when_t,\r\n    Source=source_s,\r\n    DvcAction=type_s,\r\n    EventMessage=name_s,\r\n    DvcHostname=location_s,\r\n    EventOriginalUid=id_g,\r\n    ThreatCategory=group_s,\r\n    EventType=datastream_s\r\n",
-                "functionParameters": "",
-                "version": 1,
-                "tags": [
-                  {
-                    "name": "description",
-                    "value": "Sophos Endpoint Protection Data Parser"
-                  }
-                ]
-              }
-            },
-            {
-              "type": "Microsoft.OperationalInsights/workspaces/providers/metadata",
-              "apiVersion": "2022-01-01-preview",
-              "name": "[concat(parameters('workspace'),'/Microsoft.SecurityInsights/',concat('Parser-', last(split(variables('_parserId1'),'/'))))]",
-              "dependsOn": [
-                "[variables('_parserName1')]"
-              ],
-              "properties": {
-                "parentId": "[resourceId('Microsoft.OperationalInsights/workspaces/savedSearches', parameters('workspace'), variables('parserName1'))]",
-                "contentId": "[variables('_parserContentId1')]",
-                "kind": "Parser",
-                "version": "[variables('parserVersion1')]",
-                "source": {
-                  "name": "Sophos Endpoint Protection",
-                  "kind": "Solution",
-                  "sourceId": "[variables('_solutionId')]"
-                },
-                "author": {
-                  "name": "Microsoft",
-                  "email": "[variables('_email')]"
-                },
-                "support": {
-                  "tier": "Microsoft",
-                  "name": "Microsoft Corporation",
-                  "email": "support@microsoft.com",
-                  "link": "https://support.microsoft.com/"
-                }
-              }
-            }
-          ]
-        },
-        "packageKind": "Solution",
-        "packageVersion": "[variables('_solutionVersion')]",
-        "packageName": "[variables('_solutionName')]",
-        "packageId": "[variables('_solutionId')]",
-        "contentSchemaVersion": "3.0.0",
-        "contentId": "[variables('_parserContentId1')]",
-        "contentKind": "Parser",
-        "displayName": "Sophos Endpoint Protection Data Parser",
-        "contentProductId": "[variables('_parsercontentProductId1')]",
-        "id": "[variables('_parsercontentProductId1')]",
-        "version": "[variables('parserVersion1')]"
-      }
-    },
-    {
-      "type": "Microsoft.OperationalInsights/workspaces/savedSearches",
-      "apiVersion": "2022-10-01",
-      "name": "[variables('_parserName1')]",
-      "location": "[parameters('workspace-location')]",
-      "properties": {
-        "eTag": "*",
-        "displayName": "Sophos Endpoint Protection Data Parser",
-        "category": "Samples",
-        "functionAlias": "SophosEPEvent",
-        "query": "\nSophosEP_CL\r\n| extend EventVendor = 'Sophos'\r\n| extend EventProduct = 'Endpoint Protection'\r\n| project-rename DstUserSid=user_id_s,\r\n    CustomerId=customer_id_g,\r\n    EventSeverity=severity_s,\r\n    Created=created_at_t,\r\n    SrcIpAddr=source_info_ip_s,\r\n    ThreatName=threat_s,\r\n    EndpointId=endpoint_id_g,\r\n    SrcDvcType=endpoint_type_s,\r\n    EventSubType=origin_s,\r\n    EventEndTime=when_t,\r\n    Source=source_s,\r\n    DvcAction=type_s,\r\n    EventMessage=name_s,\r\n    DvcHostname=location_s,\r\n    EventOriginalUid=id_g,\r\n    ThreatCategory=group_s,\r\n    EventType=datastream_s\r\n",
-        "functionParameters": "",
-        "version": 1,
-        "tags": [
-          {
-            "name": "description",
-            "value": "Sophos Endpoint Protection Data Parser"
-          }
-        ]
-      }
-    },
-    {
-      "type": "Microsoft.OperationalInsights/workspaces/providers/metadata",
-      "apiVersion": "2022-01-01-preview",
-      "location": "[parameters('workspace-location')]",
-      "name": "[concat(parameters('workspace'),'/Microsoft.SecurityInsights/',concat('Parser-', last(split(variables('_parserId1'),'/'))))]",
-      "dependsOn": [
-        "[variables('_parserId1')]"
-      ],
-      "properties": {
-        "parentId": "[resourceId('Microsoft.OperationalInsights/workspaces/savedSearches', parameters('workspace'), variables('parserName1'))]",
-        "contentId": "[variables('_parserContentId1')]",
-        "kind": "Parser",
-        "version": "[variables('parserVersion1')]",
-        "source": {
-          "kind": "Solution",
-          "name": "Sophos Endpoint Protection",
-          "sourceId": "[variables('_solutionId')]"
-        },
-        "author": {
-          "name": "Microsoft",
-          "email": "[variables('_email')]"
-        },
-        "support": {
-          "tier": "Microsoft",
-          "name": "Microsoft Corporation",
-          "email": "support@microsoft.com",
-          "link": "https://support.microsoft.com/"
-        }
-      }
-    },
-    {
-      "type": "Microsoft.OperationalInsights/workspaces/providers/contentTemplates",
-      "apiVersion": "2023-04-01-preview",
       "name": "[variables('dataConnectorTemplateSpecName1')]",
       "location": "[parameters('workspace-location')]",
       "dependsOn": [
         "[extensionResourceId(resourceId('Microsoft.OperationalInsights/workspaces', parameters('workspace')), 'Microsoft.SecurityInsights/contentPackages', variables('_solutionId'))]"
       ],
       "properties": {
-        "description": "Sophos Endpoint Protection data connector with template version 3.0.0",
+        "description": "Sophos Endpoint Protection data connector with template version 3.0.1",
         "mainTemplate": {
           "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
           "contentVersion": "[variables('dataConnectorVersion1')]",
@@ -394,7 +253,7 @@
         "contentSchemaVersion": "3.0.0",
         "contentId": "[variables('_dataConnectorContentId1')]",
         "contentKind": "DataConnector",
-        "displayName": "Sophos Endpoint Protection",
+        "displayName": "Sophos Endpoint Protection (using Azure Functions)",
         "contentProductId": "[variables('_dataConnectorcontentProductId1')]",
         "id": "[variables('_dataConnectorcontentProductId1')]",
         "version": "[variables('dataConnectorVersion1')]"
@@ -589,12 +448,12 @@
       "apiVersion": "2023-04-01-preview",
       "location": "[parameters('workspace-location')]",
       "properties": {
-        "version": "3.0.0",
+        "version": "3.0.1",
         "kind": "Solution",
         "contentSchemaVersion": "3.0.0",
         "displayName": "Sophos Endpoint Protection",
         "publisherDisplayName": "Microsoft Sentinel, Microsoft Corporation",
-        "descriptionHtml": "<p><strong>Note:</strong> <em>There may be <a href=\"https://aka.ms/sentinelsolutionsknownissues\">known issues</a> pertaining to this Solution, please refer to them before installing.</em></p>\n<p>The <a href=\"https://www.sophos.com/products/endpoint-antivirus.aspx\">Sophos Endpoint Protection</a> solution provides the capability to ingest <a href=\"https://docs.sophos.com/central/Customer/help/central/Customer/common/concepts/Events.html\">Sophos events</a> into Microsoft Sentinel. Refer to <a href=\"https://docs.sophos.com/central/Customer/help/central/Customer/concepts/Logs.html\">Sophos Central Admin documentation</a> for more information.</p>\n<p><strong>Underlying Microsoft Technologies used:</strong></p>\n<p>This solution takes a dependency on the following technologies, and some of these dependencies either may be in <a href=\"https://azure.microsoft.com/support/legal/preview-supplemental-terms/\">Preview</a> state or might result in additional ingestion or operational costs:</p>\n<ol type=\"a\">\n<li><p><a href=\"https://docs.microsoft.com/azure/azure-monitor/logs/data-collector-api\">Azure Monitor HTTP Data Collector API</a></p>\n</li>\n<li><p><a href=\"https://azure.microsoft.com/services/functions/#overview\">Azure Functions</a></p>\n</li>\n</ol>\n<p><strong>Data Connectors:</strong> 1, <strong>Parsers:</strong> 1</p>\n<p><a href=\"https://aka.ms/azuresentinel\">Learn more about Microsoft Sentinel</a> | <a href=\"https://aka.ms/azuresentinelsolutionsdoc\">Learn more about Solutions</a></p>\n",
+        "descriptionHtml": "<p><strong>Note:</strong> <em>There may be <a href=\"https://aka.ms/sentinelsolutionsknownissues\">known issues</a> pertaining to this Solution, please refer to them before installing.</em></p>\n<p>The <a href=\"https://www.sophos.com/products/endpoint-antivirus.aspx\">Sophos Endpoint Protection</a> solution provides the capability to ingest <a href=\"https://docs.sophos.com/central/Customer/help/central/Customer/common/concepts/Events.html\">Sophos events</a> into Microsoft Sentinel. Refer to <a href=\"https://docs.sophos.com/central/Customer/help/central/Customer/concepts/Logs.html\">Sophos Central Admin documentation</a> for more information.</p>\n<p><strong>Underlying Microsoft Technologies used:</strong></p>\n<p>This solution takes a dependency on the following technologies, and some of these dependencies either may be in <a href=\"https://azure.microsoft.com/support/legal/preview-supplemental-terms/\">Preview</a> state or might result in additional ingestion or operational costs:</p>\n<ol type=\"a\">\n<li><p><a href=\"https://docs.microsoft.com/azure/azure-monitor/logs/data-collector-api\">Azure Monitor HTTP Data Collector API</a></p>\n</li>\n<li><p><a href=\"https://azure.microsoft.com/services/functions/#overview\">Azure Functions</a></p>\n</li>\n</ol>\n<p><strong>Data Connectors:</strong> 1</p>\n<p><a href=\"https://aka.ms/azuresentinel\">Learn more about Microsoft Sentinel</a> | <a href=\"https://aka.ms/azuresentinelsolutionsdoc\">Learn more about Solutions</a></p>\n",
         "contentKind": "Solution",
         "contentProductId": "[variables('_solutioncontentProductId')]",
         "id": "[variables('_solutioncontentProductId')]",
@@ -619,11 +478,6 @@
         "dependencies": {
           "operator": "AND",
           "criteria": [
-            {
-              "kind": "Parser",
-              "contentId": "[variables('_parserContentId1')]",
-              "version": "[variables('parserVersion1')]"
-            },
             {
               "kind": "DataConnector",
               "contentId": "[variables('_dataConnectorContentId1')]",
